@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}
+  Публикации в категории {{ category.title }}
+{% endblock %}
+{% block content %}
+  <h1 class="text-center">Публикации в издании - {{ edition.title }}</h1>
+  <p class="col-6 offset-3 mb-5 lead text-center">Категория: {{ category.title }}</p>
+  <p>Описание: {{ edition.description }}</p>
+  {% if user.is_superuser %}
+    <div class="mb-2">
+      <a class="btn btn-sm text-muted" href="{% url 'publications:edit_edition' edition.id %}" role="button">
+        Отредактировать издание
+      </a>
+      <a class="btn btn-sm text-muted" href="{% url 'publications:delete_edition' edition.id %}" role="button">
+        Удалить издание
+      </a>
+      <a class="btn btn-sm text-muted" href="{% url 'publications:edition_download' edition.pk %}"> Скачать издание </a>
+    </div>
+  {% endif %}
+  {% for publication in page_obj %}
+    <article class="mb-5">  
+      {% include "includes/publications_card.html" %}
+    </article>   
+  {% endfor %}
+  {% include "includes/paginator.html" %}
+{% endblock %}

@@ -1,0 +1,25 @@
+<div class="col d-flex justify-content-center">
+  <div class="card" style="width: 40rem;">
+    <div class="card-body">
+      {% if edition.image %}
+        <a href="{{ edition.image.url }}" target="_blank">
+          <img class="border-3 rounded img-fluid img-thumbnail mb-2 mx-auto d-block" src="{{ edition.image.url }}">
+        </a>
+      {% endif %}
+      <h5 class="card-title">{{ edition.title }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">
+        <small>
+          {% if not edition.is_published %}
+            <p class="text-danger">Издание снято с публикации админом</p>
+          {% elif not edition.category.is_published %}
+            <p class="text-danger">Выбранная категория снята с публикации админом</p>
+          {% endif %}
+
+          в категории {% include "includes/category_link.html" %}
+        </small>
+      </h6>
+      <p class="card-text">{{ edition.text|truncatewords:10 }}</p>
+      <a href="{% url 'publications:edition_detail' edition.category.slug edition.slug   %}" class="card-link">Смотреть все статьи</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+  {% if 'publication' in request.path %}
+    {% if 'new' in request.path %}
+      <h1>Создание новой публикации</h1>
+    {% else %}
+      <h1>Редактирование публикации</h1>
+    {% endif %}
+  {% endif %}
+  {% if 'edition' in request.path %}
+    {% if 'new' in request.path %}
+      <h1>Создание нового издания</h1>
+    {% else %}
+      <h1>Редактирование издания</h1>
+    {% endif %}
+  {% endif %}
+  {% if 'category' in request.path %}
+    {% if 'new' in request.path %}
+      <h1>Создание новой категории</h1>
+    {% else %}
+      <h1>Редактирование категории</h1>
+    {% endif %}
+  {% endif %}
+  {% if 'application' in request.path %}
+    {% if 'new' in request.path %}
+      <h1>Подать заявку на публикацию</h1>
+    {% else %}
+      <h1>Редактирование заявки</h1>
+    {% endif %}
+  {% endif %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit">Сохранить</button>
+  </form>
+{% endblock %}

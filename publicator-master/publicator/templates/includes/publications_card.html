@@ -1,0 +1,32 @@
+<div class="col d-flex justify-content-center">
+  <div class="card" style="width: 40rem;">
+    <div class="card-body">
+      {% if publication.image %}
+        <a href="{{ publication.image.url }}" target="_blank">
+          <img class="border-3 rounded img-fluid img-thumbnail mb-2 mx-auto d-block" src="{{ publication.image.url }}">
+        </a>
+      {% endif %}
+      <h5 class="card-title">{{ publication.title }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">
+        <small>
+          {% if not publication.is_published %}
+            <p class="text-danger">Пост снят с публикации админом</p>
+          {% elif not publication.edition.category.is_published %}
+            <p class="text-danger">Выбранная категория снята с публикации админом</p>
+          {% endif %}
+          {{ publication.pub_date|date:"d E Y, H:i" }} | {% if publication.location and publication.location.is_published %}{{ publication.location.name }}{% else %}Планета Земля{% endif %}<br>
+          От авторов
+            {% for author in publication.authors.all %}
+              <a class="text-muted" href="{% url 'publications:profile' author.user.username %}">
+              @{{ author.user.first_name }}as</a>
+            {% endfor %}
+            {% with edition=publication.edition %}
+              в категории {% include "includes/category_link.html" %}
+            {% endwith %}
+        </small>
+      </h6>
+      <p class="card-text">{{ publication.text|truncatewords:10 }}</p>
+      <a href="{% url 'publications:publication_detail' publication.edition.category.slug publication.edition.slug  publication.id %}" class="card-link">Читать полный текст</a>
+    </div>
+  </div>
+</div>

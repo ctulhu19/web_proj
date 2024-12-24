@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}
+  {{ publication.title }} |{{ publication.pub_date|date:"d E Y" }}
+{% endblock %}
+{% block content %}
+<div class="col d-flex justify-content-center" xmlns="http://www.w3.org/1999/html">
+    <div class="card" style="width: 40rem;">
+      <div class="card-body">
+        {% if publication.image %}
+          <a href="{{ publication.image.url }}" target="_blank">
+            <img class="border-3 rounded img-fluid img-thumbnail mb-2 mx-auto d-block" src="{{ publication.image.url }}">
+          </a>
+        {% endif %}
+        <h5 class="card-title">{{ publication.title }}</h5>
+          <a href="{% url 'publications:publication_download' publication.pk %}"> Скачать публикацию </a>
+        <h6 class="card-subtitle mb-2 text-muted">
+          <small>
+            {% if not publication.is_published %}
+              <p class="text-danger">Статья снята с публикации админом</p>
+            {% elif not publication.edition.is_published %}
+              <p class="text-danger">Выбранное издание снято с публикации админом</p>
+            {% elif not publication.edition.category.is_published %}
+              <p class="text-danger">Выбранная категория снята с публикации админом</p>
+            {% endif %}
+            {{ publication.pub_date|date:"d E Y, H:i" }}<br>
+            Авторы:
+             {% for author in publication.authors.all %}
+              <a class="text-muted" href="{% url 'publications:profile' author.user.username %}">
+              @{{ author.user.username }}</a>
+            {% endfor %}
+            Ссылки:
+            {% for publink in publication.link.all %}
+            <a href="{% url 'publications:publication_detail' publink.edition.category.slug publink.edition.slug  publink.id %}" class="card-link">
+              @{{ publink.title }}</a>
+            {% endfor %}
+            в категории {% include "includes/category_link.html" %}
+          </small>
+        </h6>
+        <h6>Тэги: </h6>
+        {% for tag in publication.key_words.all %}
+              {{ tag.name }}
+        {% endfor %}
+        <h6>Аннотация: </h6>
+        <p class="card-text">{{ publication.annotation|linebreaksbr }}</p>
+        <h6>Текст: </h6>
+        <p class="card-text">{{ publication.text|linebreaksbr }}</p>
+        {% if user.is_superuser %}
+          <div class="mb-2">
+            <a class="btn btn-sm text-muted" href="{% url 'publications:edit_publication' publication.id %}" role="button">
+              Отредактировать публикацию
+            </a>
+            <a class="btn btn-sm text-muted" href="{% url 'publications:delete_publication' publication.id %}" role="button">
+              Удалить публикацию
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
